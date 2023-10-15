@@ -6,6 +6,8 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 from models import movie
 
+# todo(nmj): move status const into an other script
+# todo(nmj): write all status variables
 STATUS_200 = {
     "code": 200,
     "message": "OK - The requested action was successful."
@@ -51,7 +53,7 @@ def get_movie(id_movie):
         "movie": results,
     }
 
-    response["status"] = STATUS_200 if (results != None) else STATUS_204
+    response["status"] = STATUS_200
 
     return jsonify(response)
 
