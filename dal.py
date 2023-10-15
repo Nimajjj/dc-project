@@ -22,18 +22,22 @@ class DAL():
         )
 
 
-    def Select(self, query: str) -> list:
+    def Select(self, query: str, values: tuple) -> list:
         cursor = self.db.cursor()
-        cursor.execute(query)
+        cursor.execute(query, self._prepareValues(values))
         results = cursor.fetchall()
         return results
 
-    
-    def SelectSingleRow(self, query: str) -> dict:
+
+    def SelectSingleRow(self, query: str) -> dict|None:
         cursor = self.db.cursor()
         cursor.execute(query)
 
         results = cursor.fetchall()
+
+        if (len(results) == 0):
+            return None 
+
         columns = cursor.column_names
         dict_result = {} 
         
@@ -45,5 +49,19 @@ class DAL():
 
     def Insert(self, query: str, values) -> None:
         cursor = self.db.cursor()
-        cursor.execute(query, values)
+        cursor.execute(query, self._prepareValues(values))
         self.db.commit()
+
+
+    # privates
+    def _prepareValues(self, values: tuple) -> tuple:
+        listValues = []
+
+        for value in values:
+            if (isinstance(value, str)):
+                listValues.append(value.replace("\"", "'"))
+                continue
+            listValues.append(value)
+
+        return tuple(listValues)
+    
