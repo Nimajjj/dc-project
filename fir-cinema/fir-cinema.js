@@ -114,28 +114,37 @@
         });
 
 
-        console.clear();
-        console.log(title); 
-        console.log(date);
-        console.log(duration);
-        console.log(genres); 
-        console.log(directors);
-        console.log(writers);
-        console.log(actors);
-        console.log(thumbnail);
-        console.log(overview);
-        console.log(country);
-        console.log(distributor); 
-        console.log(language);
-        console.log(visaNumber);
+        data = {
+            "title": title,
+            "date": date,
+            "duration": duration,
+            "genres": genres,
+            "directors": directors,
+            "writers": writers,
+            "actors": actors,
+            "thumbnail": thumbnail,
+            "overview": overview,
+            "country": country,
+            "distributor": distributor,
+            "language": language,
+            "visa": visaNumber
+        };
+
+        // Send message to the background script because the 
+        // content script doesn't have the priviliege to use CROS.
+        browser.runtime.sendMessage({
+            command: "scrape",
+            data: data
+        })
     }
+
 
     /**
     * Listen for messages from the background script.
     * If url is valid then Call "scrapPage()"
     * Else alert user 
     */
-    browser.runtime.onMessage.addListener((message) => {
+    browser.runtime.onMessage.addListener(async message => {
         if (message.command === "scrap_page") {
             const url = document.location.href
             if (isValidUrl(url)) {
@@ -147,6 +156,9 @@
         } 
         else {
             console.log("[FirCinema] [ERROR] Unknown message: " + message.command)
+        }
+        if(msg.command === "scrape") {
+            await sendData(msg.data)
         }
     });
 })();
