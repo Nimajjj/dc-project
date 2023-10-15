@@ -10,13 +10,13 @@
     }
 
     function getDuration(divElement) {
-    const durationMatch = divElement.innerHTML.match(/>([^<]+)<\/span>([^<]*)/);
+        const durationMatch = divElement.innerHTML.match(/>([^<]+)<\/span>([^<]*)/);
 
-    if(durationMatch) {
-        return durationMatch[2].trim();
-    }
+        if(durationMatch) {
+            return durationMatch[2].trim();
+        }
 
-    return null;
+        return null;
     }
 
 

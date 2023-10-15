@@ -2,8 +2,8 @@
 import time
 from tmdb import *
 
-from_id = 0
-to_id = 200
+from_id = 200
+to_id = 400
 
 def PrintList(l: list) -> None:
     for e in l:
