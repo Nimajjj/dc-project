@@ -46,7 +46,6 @@ class MovieComplete:
         self._linkForeignKeys()
 
 
-    # todo(nmj): replace breaking charactes in queries
     # privates
     def _insertMainTables(self) -> None:
         self._insertGenres()
