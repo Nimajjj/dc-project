@@ -1,4 +1,5 @@
-# Cinema API
+# DC-Project
+aka Dad Cinema - Project
 
 ## The project contains 2 distincts programs:
 1. A API server allowing communication with a movie database. The server can also request movies data from the TMDB API.
