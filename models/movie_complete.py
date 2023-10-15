@@ -5,6 +5,8 @@ from models.language import Language
 from models.genre import Genre
 from models.country import Country
 
+# todo(nmj): Fix duplicates in languages and countries table <!>
+
 class MovieComplete:
     def __init__(self, movie: Movie, genres: list, original_language: str, production_countries: list, spoken_languages: list) -> None:
         # dal
@@ -54,8 +56,8 @@ class MovieComplete:
 
 
     def _linkForeignKeys(self) -> None:
-        query = f"SELECT id_movie FROM movies WHERE title=\"{self.movie.title}\";"
-        res = self.dal.Select(query)
+        query = f"SELECT id_movie FROM movies WHERE title=\"%s\";"
+        res = self.dal.Select(query, (self.movie.title,))
 
         # if cannot find movie then return
         if (len(res) == 0):
@@ -71,16 +73,16 @@ class MovieComplete:
     # Foreign keys links
     def _linkGenreFK(self, id_movie: int) -> None:
         for genre in self.genres:
-            query = f"SELECT id_genre FROM genres WHERE title=\"{genre.title}\";"
-            res = self.dal.Select(query)
+            query = f"SELECT id_genre FROM genres WHERE title=%s;"
+            res = self.dal.Select(query, (genre.title,))
             
             if (len(res) == 0):
                 return
 
             id_genre = res[0][0]
 
-            query = f"SELECT * FROM genres_movies WHERE id_movie = {id_movie} AND id_genre = {id_genre}"
-            res = self.dal.Select(query)
+            query = f"SELECT * FROM genres_movies WHERE id_movie = %s AND id_genre = %s"
+            res = self.dal.Select(query, (id_movie, id_genre))
             if (len(res) != 0):
                 return
 
@@ -90,14 +92,14 @@ class MovieComplete:
 
     def _linkCountryFK(self, id_movie: int) -> None:
         for country in self.production_countries:
-            query = f"SELECT id_country FROM countries WHERE iso_3166_1=\"{country.iso_3166_1}\";"
-            res = self.dal.Select(query)
+            query = f"SELECT id_country FROM countries WHERE iso_3166_1=%s;"
+            res = self.dal.Select(query, (country.iso_3166_1,))
             if (len(res) == 0):
                 return
             id_country = res[0][0]
 
-            query = f"SELECT * FROM countries_movies WHERE id_movie = {id_movie} AND id_country = {id_country}"
-            res = self.dal.Select(query)
+            query = f"SELECT * FROM countries_movies WHERE id_movie = %s AND id_country = %s"
+            res = self.dal.Select(query, (id_movie, id_country))
             if (len(res) != 0):
                 return
 
@@ -107,15 +109,15 @@ class MovieComplete:
 
     def _linkLanguageFK(self, id_movie: int) -> None:
         for language in self.spoken_languages:
-            query = f"SELECT id_language FROM languages WHERE iso_639_1=\"{language.iso_639_1}\";"
-            res = self.dal.Select(query)
+            query = f"SELECT id_language FROM languages WHERE iso_639_1=%s;"
+            res = self.dal.Select(query, (language.iso_369_1,))
 
             if (len(res) == 0):
                 return
             id_language = res[0][0]
 
-            query = f"SELECT * FROM languages_movies WHERE id_movie = {id_movie} AND id_language = {id_language}"
-            res = self.dal.Select(query)
+            query = f"SELECT * FROM languages_movies WHERE id_movie = %s AND id_language = %s"
+            res = self.dal.Select(query, (id_movie, id_language))
             if (len(res) != 0):
                 return
 
@@ -125,8 +127,8 @@ class MovieComplete:
 
     # Main tables insertion
     def _insertMovie(self) -> None:
-        query = f"SELECT * FROM movies WHERE title=\"{self.movie.title}\";"
-        res = self.dal.Select(query)
+        query = f"SELECT * FROM movies WHERE title=%s;"
+        res = self.dal.Select(query, (self.movie.title,))
 
         # if movie already exists then return
         if (len(res) != 0):
@@ -152,8 +154,8 @@ class MovieComplete:
 
     def _insertSpokenLanguages(self) -> None:
         for language in self.spoken_languages:
-            query = f"SELECT * FROM languages WHERE iso_639_1=\"{language.iso_639_1}\";"
-            res = self.dal.Select(query)
+            query = f"SELECT * FROM languages WHERE iso_639_1=%s;"
+            res = self.dal.Select(query, (language.iso_639_1,))
 
             # if language already exists then continue
             if (len(res) != 0):
@@ -166,8 +168,8 @@ class MovieComplete:
 
     def _insertProductionCountries(self) -> None:
         for country in self.production_countries:
-            query = f"SELECT * FROM countries WHERE iso_3166_1=\"{country.iso_3166_1}\";"
-            res = self.dal.Select(query)
+            query = f"SELECT * FROM countries WHERE iso_3166_1=%s;"
+            res = self.dal.Select(query, (country.iso_3166_1,))
 
             # if country already exists then continue
             if (len(res) != 0):
@@ -180,8 +182,8 @@ class MovieComplete:
 
     def _insertGenres(self) -> None:
         for genre in self.genres:
-            query = f"SELECT * FROM genres WHERE title=\"{genre.title}\";"
-            res = self.dal.Select(query)
+            query = f"SELECT * FROM genres WHERE title=%s;"
+            res = self.dal.Select(query, (genre.title,))
 
             # if genre already exists then continue
             if (len(res) != 0):
