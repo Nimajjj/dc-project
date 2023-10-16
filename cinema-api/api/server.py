@@ -44,6 +44,7 @@ def RunServer() -> None:
 # Route "/api/movie/<id_movie>" (GET) return movie with the given id
 @app.route('/api/movie/<int:id_movie>', methods=['GET'])
 def get_movie(id_movie):
+    print(f"[DC-api] ['GET' /api/movie/{id_movie}] Requesting movie from database...")
     dal = DAL()
     query = f"SELECT * FROM movies WHERE id_movie={id_movie}"
 
