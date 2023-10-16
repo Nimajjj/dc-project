@@ -4,7 +4,8 @@ from dal import DAL
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
-from models import movie
+from api import route_post_api_movie
+
 
 # todo(nmj): move status const into an other script
 # todo(nmj): write all status variables
@@ -66,37 +67,7 @@ def post_movie():
     if not request.json or not 'title' in request.json:
         return jsonify({'error': 'Title is required'}), 400
 
-    m = movie.Movie(
-        0,
-        request.json["duration"],
-        "",
-        "",
-        request.json["title"],
-        request.json["overview"],
-        request.json["thumbnail"],
-        request.json["date"],
-        request.json["visa"],
-        0,
-        "",
-        "",
-        ""
-    )                                           # movie.Movie
-    distributor = request.json["distributor"]   # str
-    language = request.json["language"]         # list
-    country = request.json["country"]           # list
-    genres = request.json["genres"]             # list
-    actors = request.json["actors"]             # list
-    directors = request.json["directors"]       # list
-    writers = request.json["writers"]           # list
-
-    print(m)               
-    print(distributor)     
-    print(language)
-    print(country)
-    print(genres)
-    print(actors)
-    print(directors)
-    print(writers) 
+    route_post_api_movie.ApplyData(request.json)
 
     response = {
         "status": STATUS_201,

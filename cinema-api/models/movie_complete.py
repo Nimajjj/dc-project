@@ -5,8 +5,8 @@ from models.language import Language
 from models.genre import Genre
 from models.country import Country
 
-# todo(nmj): Fix duplicates in languages and countries table <!>
 
+# todo(nmj): change MovieComplete class to database to tmdb class
 class MovieComplete:
     def __init__(self, movie: Movie, genres: list, original_language: str, production_countries: list, spoken_languages: list) -> None:
         # dal
