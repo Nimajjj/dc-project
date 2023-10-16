@@ -30,14 +30,15 @@ def ApplyData(data) -> None:
     # todo(nmj): double check movie title AND release date
     # to ensure that it is not an other movie with the same title
     if (results):
+        print("[DC-api] ['POST' /api/movie] Movie already exists in database")
+        print("[DC-api] ['POST' /api/movie] Updating movie data in database...")
         # Update database entry
-        print("Movie already exists")
     else:
         # Append database entry
         # todo(nmj): Double check on TMDB api side that an allocine 
         # movie not already exists
-        print("[DC-api] Movie does not exists in database")
-        print("[DC-api] Adding movie to database...")
+        print("[DC-api] ['POST' /api/movie] Movie does not exists in database")
+        print("[DC-api] ['POST' /api/movie] Adding movie to database...")
         m.InsertIntoDB()
         
 
