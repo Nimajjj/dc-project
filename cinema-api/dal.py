@@ -22,14 +22,19 @@ class DAL():
         )
 
 
-    def Select(self, query: str, values: tuple) -> list:
+    def Select(self, query: str, values: tuple, debug: bool = False) -> list:
+        if (debug):
+            print(f"[DAL] {query} | {values}")
+
         cursor = self.db.cursor()
         cursor.execute(query, self._prepareValues(values))
         results = cursor.fetchall()
         return results
 
 
-    def SelectSingleRow(self, query: str) -> dict|None:
+    def SelectSingleRow(self, query: str, debug: bool = False) -> dict|None:
+        if (debug):
+            print(f"[DAL] {query}")
         cursor = self.db.cursor()
         cursor.execute(query)
 
@@ -47,7 +52,9 @@ class DAL():
         return dict_result
 
 
-    def Insert(self, query: str, values) -> None:
+    def Insert(self, query: str, values, debug: bool = False) -> None:
+        if (debug):
+            print(f"[DAL] {query} | {values}")
         cursor = self.db.cursor()
         cursor.execute(query, self._prepareValues(values))
         self.db.commit()
