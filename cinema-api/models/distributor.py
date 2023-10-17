@@ -2,8 +2,8 @@
 from dal import DAL
 
 class Distributor:
-    def __init__(self, id_distributor, distributor_name):
-        self.id_distributor = id_distributor
+    def __init__(self, distributor_name):
+        self.id_distributor = 0
         self.distributor_name = distributor_name
 
     def InsertIntoDB(self) -> None:
