@@ -1,4 +1,5 @@
-# models/movie2.py
+# Copyright (C) 2023 Borello Benjamin
+# models/movie.py
 import re
 import locale
 import datetime
@@ -55,6 +56,14 @@ class  Movie:
                 f"writers={self.writers},\n" \
                 f"minimum_age={self.minimum_age},\n" \
                 f"awards={self.awards})"
+
+
+    # todo(nmj): double check movie title AND release date
+    # to ensure that it is not an other movie with the same title
+    def IsInDatabase(self) -> bool:
+        query = "SELECT id_movie FROM movies WHERE title=%s;"
+        res = DAL().Select(query, (self.title,))
+        return (len(res) != 0)
 
     
     def InsertIntoDB(self) -> int:
@@ -144,10 +153,11 @@ class  Movie:
 
 
     def _insertMovie(self, id_distributor: int|None) -> int:
-        query = "SELECT id_movie FROM movies WHERE title=%s;"
-        res = DAL().Select(query, (self.title,))
-        if (len(res) != 0):
-            return res[0][0] 
+        if (self.IsInDatabase()):
+            query = "SELECT id_movie FROM movies WHERE title=%s;"
+            res = DAL().Select(query, (self.title,))
+            if (len(res) != 0):
+                return res[0][0] 
 
         query = (
             "INSERT INTO movies " 

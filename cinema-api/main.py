@@ -1,3 +1,4 @@
+# Copyright (C) 2023 Borello Benjamin
 # main.py
 import tmdb
 from dc_api import server

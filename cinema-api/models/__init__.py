@@ -1,3 +1,4 @@
+# Copyright (C) 2023 Borello Benjamin
 # models/__init__.py
 
 from . import movie_complete

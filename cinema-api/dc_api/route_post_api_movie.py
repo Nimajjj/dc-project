@@ -1,5 +1,5 @@
+# Copyright (C) 2023 Borello Benjamin
 # dc_api/route_post_api_movie.py
-from dal import DAL
 from models.actor import Actor
 from models.country import Country
 from models.director import Director
@@ -40,24 +40,13 @@ def ApplyData(data) -> None:
     for title in data["writers"]:
         m.writers.append(Writer(title))
 
-    # Verify is movie already exists in db
-    dal = DAL()
-    query = "SELECT id_movie, release_date FROM movies WHERE title = %s"
-    values = (m.title,)
-    results = dal.Select(query, values)
-
-    # todo(nmj): double check movie title AND release date
-    # to ensure that it is not an other movie with the same title
-    if (results):
-        print("[DC-api] ['POST' /api/movie] Movie already exists in database")
+    if (m.IsInDatabase()):
         print("[DC-api] ['POST' /api/movie] Updating movie data in database...")
-        # Update database entry
+        # todo(nmj): update database entry
     else:
-        # Append database entry
-        # todo(nmj): Double check on TMDB api side that an allocine 
-        # movie not already exists
-        print("[DC-api] ['POST' /api/movie] Movie does not exists in database")
         print("[DC-api] ['POST' /api/movie] Adding movie to database...")
-        print(m.InsertIntoDB())
+        db_response = m.InsertIntoDB()
+        log_message = "Movie successfuly inserted in database." if (db_response > 0) else "Error while inserting movie into database."
+        print(f"[DC-api] ['POST' /api/movie] {log_message}")
         
 

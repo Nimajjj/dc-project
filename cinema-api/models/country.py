@@ -1,3 +1,4 @@
+# Copyright (C) 2023 Borello Benjamin
 # models/country.py
 from dal import DAL
 

@@ -1,3 +1,4 @@
+# Copyright (C) 2023 Borello Benjamin
 # tmdb.py
 import requests
 from models.language import Language

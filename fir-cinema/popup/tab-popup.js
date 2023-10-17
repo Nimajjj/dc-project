@@ -1,3 +1,4 @@
+// Copyright (C) 2023 Borello Benjamin
 /**
  * Listen for clicks on the buttons, and send the appropriate message to
  * the content script in the page.

@@ -1,3 +1,4 @@
+# Copyright (C) 2023 Borello Benjamin
 # models/director.py
 from dal import DAL
 

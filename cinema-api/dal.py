@@ -1,3 +1,4 @@
+# Copyright (C) 2023 Borello Benjamin
 # dal.py
 
 # Singleton class to allow communication with database

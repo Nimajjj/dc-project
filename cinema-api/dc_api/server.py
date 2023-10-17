@@ -1,3 +1,4 @@
+# Copyright (C) 2023 Borello Benjamin
 # dc_api/server.py
 import os
 from dal import DAL
