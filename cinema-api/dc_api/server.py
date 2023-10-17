@@ -1,4 +1,4 @@
-# api/server.py
+# dc_api/server.py
 import os
 from dal import DAL
 from dotenv import load_dotenv

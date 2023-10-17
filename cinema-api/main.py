@@ -1,6 +1,6 @@
 # main.py
 import tmdb
-from api import server
+from dc_api import server
 from models.movie import Movie
 
 id = 961084
