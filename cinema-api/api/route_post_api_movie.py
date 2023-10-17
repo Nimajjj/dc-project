@@ -1,25 +1,44 @@
 # api/route_post_api_movie.py
 from dal import DAL
-from models import movie
-from models import movie_allo
+from models.actor import Actor
+from models.country import Country
+from models.director import Director
+from models.distributor import Distributor
+from models.genre import Genre
+from models.movie import Movie
+from models.language import Language
+from models.writer import Writer
 
 
 def ApplyData(data) -> None:
-    # Creating movie_allo class
-    m = movie_allo.MovieAllo()
+    # Creating Movie object
+    m = Movie()
+    m.src_type = "FirCinema"
     m.title = data["title"]
     m.duration = data["duration"]
     m.overview = data["overview"]
     m.thumnail = data["thumbnail"]
     m.release_date = data["date"]
     m.visa = data["visa"]
-    m.distributor = data["distributor"]
-    m.languages = data["language"]
-    m.countries = data["country"]
-    m.genres = data["genres"]   
-    m.actors = data["actors"]  
-    m.directors = data["directors"]
-    m.writers = data["writers"]   
+    m.distributor = Distributor(data["distributor"])
+
+    for title in data["language"]:
+        m.languages.append(Language("iso_639_1", title, title))
+
+    for title in data["country"]:
+        m.countries.append(Country("iso_3166_1", title))
+
+    for title in data["genres"]:
+        m.genres.append(Genre(title))
+
+    for title in data["actors"]:
+        m.actors.append(Actor(title))
+
+    for title in data["directors"]:
+        m.directors.append(Director(title))
+
+    for title in data["writers"]:
+        m.writers.append(Writer(title))
 
     # Verify is movie already exists in db
     dal = DAL()
@@ -39,6 +58,6 @@ def ApplyData(data) -> None:
         # movie not already exists
         print("[DC-api] ['POST' /api/movie] Movie does not exists in database")
         print("[DC-api] ['POST' /api/movie] Adding movie to database...")
-        m.InsertIntoDB()
+        print(m.InsertIntoDB())
         
 
