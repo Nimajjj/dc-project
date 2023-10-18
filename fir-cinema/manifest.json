@@ -1,0 +1,40 @@
+{
+  "manifest_version": 2,
+  "name": "FirCinema",
+  "version": "1.0",
+
+  "description": "Scrap Allocine movie pages to insert them into cinema database.",
+
+  "permissions": [
+        "activeTab", 
+        "http://localhost:8080/",
+        "http://localhost:8080/*"
+  ],
+
+  "icons": {
+    "48": "icons/movie-film.png"
+  },
+
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false,
+    "type": "module"
+  },
+
+  "browser_action": {
+    "default_icon": "icons/movie-film.png",
+    "default_title": "FirCinema",
+    "default_popup": "popup/tab-popup.html"
+  },
+
+  "web_accessible_resources": [
+    "icons/movie-film.png"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": ["*://*.allocine.fr/*", "*://127.0.0.1:8080/*", "http://localhost:8080/*"],
+      "js": ["fir-cinema.js"]
+    }
+  ]
+}
