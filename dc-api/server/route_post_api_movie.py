@@ -1,5 +1,5 @@
 # Copyright (C) 2023 Borello Benjamin
-# dc_api/route_post_api_movie.py
+# server/route_post_api_movie.py
 from models.actor import Actor
 from models.country import Country
 from models.director import Director

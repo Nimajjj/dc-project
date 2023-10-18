@@ -1,6 +1,8 @@
 # Copyright (C) 2023 Borello Benjamin
 # models/languages.py
 from dal import DAL
+# todo(nmj): handle languages translations:
+# TMDB return native name and nglish name while FirCinema return only french name
 
 class Language:    
     def __init__(self, iso_639_1, language_name, english_name):
