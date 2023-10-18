@@ -145,7 +145,6 @@ class  Movie:
 
         if (self.src_type == "TMDB"):
             if (self.IsInDatabase):
-                print("Movie already exists in db, pass from inserting to updating...")
                 return self.UpdateInDB()
 
         self._insertMainTables()

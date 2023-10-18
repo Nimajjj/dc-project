@@ -1,11 +1,11 @@
 # Copyright (C) 2023 Borello Benjamin
-# dc_api/server.py
+# server/server.py
 import os
 from dal import DAL
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
-from dc_api import route_post_api_movie
+from server import route_post_api_movie
 
 
 # todo(nmj): move status const into an other script
