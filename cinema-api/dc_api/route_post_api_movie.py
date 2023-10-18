@@ -42,7 +42,9 @@ def ApplyData(data) -> None:
 
     if (m.IsInDatabase()):
         print("[DC-api] ['POST' /api/movie] Updating movie data in database...")
-        # todo(nmj): update database entry
+        db_response = m.UpdateInDB()
+        log_message = "Movie successfuly updated in database." if (db_response > 0) else "Error while updating movie from database."
+        print(f"[DC-api] ['POST' /api/movie] {log_message}")
     else:
         print("[DC-api] ['POST' /api/movie] Adding movie to database...")
         db_response = m.InsertIntoDB()

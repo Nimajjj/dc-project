@@ -61,6 +61,14 @@ class DAL():
         self.db.commit()
 
 
+    def Execute(self, query: str, values, debug: bool = False) -> None:
+        if (debug):
+            print(f"[DAL] {query} | {values}")
+        cursor = self.db.cursor()
+        cursor.execute(query, self._prepareValues(values))
+        self.db.commit()
+
+
     # privates
     def _prepareValues(self, values: tuple) -> tuple:
         listValues = []

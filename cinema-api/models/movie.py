@@ -65,6 +65,65 @@ class  Movie:
         res = DAL().Select(query, (self.title,))
         return (len(res) != 0)
 
+    def GetDBMovieID(self) -> int:
+        query = "SELECT id_movie FROM movies WHERE title=%s;"
+        res = DAL().Select(query, (self.title,))
+        if (len(res) == 0):
+            # movie insertion failed
+            return -1
+
+        return res[0][0]
+
+    
+    def UpdateInDB(self) -> int:
+        if (not self.IsInDatabase()):
+            return -1
+
+        if (self.src_type == "n/a"):
+            return -2
+
+        if (self.src_type == "FirCinema"):
+            print("[DC-api] Updating db movie from FirCinema source")
+            self.id_movie = self.GetDBMovieID()
+            self._updateFromFCSource()
+
+        if (self.src_type == "TMDB"):
+            print("[DC-api] Updating db movie from TMDB source")
+            self.id_movie = self.GetDBMovieID()
+            self._updateFromTMDBSource()
+
+        return self.id_movie
+
+
+    def _updateFromTMDBSource(self) -> None:
+        # Just in case, anyway ther is securities which avoid duplicated entries
+        self._insertLanguages()
+        self._insertCountries()
+
+        self._linkLanguages()
+        self._linkCountries()
+
+        query = "UPDATE movies SET original_title = %s, imdb_id = %s, original_laguage = %s WHERE id_movie = %s"
+        values = (self.original_title, self.imdb_id, self.language, self.id_movie)
+        DAL().Execute(query, values, True)
+
+
+    def _updateFromFCSource(self) -> None:
+        # Just in case, anyway ther is securities which avoid duplicated entries
+        self._insertActors()
+        self._insertDirectors()
+        self._insertWriters()
+
+        self._linkActors()
+        self._linkDirectors()
+        self._linkWriters()
+
+        id_distributor = self._insertDistributor()
+        query = "UPDATE movies SET id_distributor = %s WHERE id_movie = %s"
+        values = (id_distributor, self.id_movie)
+        DAL().Execute(query, values, True)
+
+
     
     def InsertIntoDB(self) -> int:
         # avoid insertion of unprepared movie
@@ -85,7 +144,9 @@ class  Movie:
             self.release_date = date.strftime("%Y-%m-%d")
 
         if (self.src_type == "TMDB"):
-            pass
+            if (self.IsInDatabase):
+                print("Movie already exists in db, pass from inserting to updating...")
+                return self.UpdateInDB()
 
         self._insertMainTables()
         self._linkForeignKeys()
@@ -106,7 +167,7 @@ class  Movie:
 
 
     def _linkForeignKeys(self) -> None:
-        if (self.id_movie <= 0):
+        if (self.id_movie <= 0 or not self.IsInDatabase()):
             return
 
         self._linkGenres()
@@ -119,28 +180,46 @@ class  Movie:
 
     # insert
     def _insertGenres(self) -> None:
+        if (len(self.genres) == 0):
+            return
+
         for genre in self.genres:
             genre.InsertIntoDB()
 
     def _insertLanguages(self) -> None:
+        if (len(self.languages) == 0):
+            return
+
         for language in self.languages:
             # todo(nmj): create function to get iso_639_1 from french language name
             language.InsertIntoDB()
 
     def _insertCountries(self) -> None:
+        if (len(self.countries) == 0):
+            return
+
         for country in self.countries:
             # todo(nmj): create function to get iso_3166_1 from french country name
             country.InsertIntoDB()
 
     def _insertActors(self) -> None:
+        if (len(self.actors) == 0):
+            return
+
         for actor in self.actors:
             actor.InsertIntoDB()
 
     def _insertDirectors(self) -> None:
+        if (len(self.directors) == 0):
+            return
+
         for director in self.directors:
             director.InsertIntoDB()
 
     def _insertWriters(self) -> None:
+        if (len(self.writers) == 0):
+            return
+
         for writer in self.writers:
             writer.InsertIntoDB()
 
@@ -182,14 +261,8 @@ class  Movie:
         )
 
         DAL().Insert(query, values)
+        return self.GetDBMovieID()
 
-        query = "SELECT id_movie FROM movies WHERE title=%s;"
-        res = DAL().Select(query, (self.title,))
-        if (len(res) == 0):
-            # movie insertion failed
-            return -1
-
-        return res[0][0]
 
     # link
     def _linkGenres(self) -> None:

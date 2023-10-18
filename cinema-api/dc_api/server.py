@@ -5,7 +5,7 @@ from dal import DAL
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
-from api import route_post_api_movie
+from dc_api import route_post_api_movie
 
 
 # todo(nmj): move status const into an other script
