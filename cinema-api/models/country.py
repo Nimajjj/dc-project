@@ -1,6 +1,7 @@
 # Copyright (C) 2023 Borello Benjamin
 # models/country.py
 from dal import DAL
+# todo(nmj): Handle english / french country name from TMDB and FirCinema
 
 class Country:
     def __init__(self, iso_3166_1, country_name):  

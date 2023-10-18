@@ -7,6 +7,7 @@ from models.genre import Genre
 from models.country import Country
 from models.language import Language
 
+# todo(nmj): move the f*cking credentials out there ...
 url = "https://api.themoviedb.org/3/movie/{movie_id}?language=fr-FR"
 headers = {
     "accept": "application/json",
@@ -14,10 +15,9 @@ headers = {
 }
 
 def RequestMovie(id: int) -> Movie|None:
-    # request api
     response = requests.get(url.format(movie_id = id), headers=headers).json()
 
-    # verify if movie with given id exists
+    # todo(nmj): verify data integrity
     if not "title" in response.keys():
         return None
 
@@ -51,6 +51,6 @@ def RequestMovie(id: int) -> Movie|None:
             language["english_name"],
         ))
     
-    # Always assign src_type in last in case one of the previous assignment fail
+    # Always assign src_type in last in case one of the previous assignment fails
     movie.src_type = "TMDB"
     return movie

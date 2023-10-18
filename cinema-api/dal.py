@@ -1,7 +1,7 @@
 # Copyright (C) 2023 Borello Benjamin
 # dal.py
 
-# Singleton class to allow communication with database
+# Singleton class for Database Abstraction Layer
 import mysql.connector
 from mysql.connector import cursor
 
@@ -15,9 +15,10 @@ class DAL():
 
     # Constructor
     def __init__(self) -> None:
+        # todo(nmj): move the f*cking credentials out there ...
         self.db = mysql.connector.connect(
             host = "localhost",
-            user = "root",
+            user = "root",  # i know...
             password = "",
             database = "cinema"
         )

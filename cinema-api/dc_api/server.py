@@ -50,6 +50,7 @@ def get_movie(id_movie):
     query = f"SELECT * FROM movies WHERE id_movie={id_movie}"
 
     results = dal.SelectSingleRow(query)
+    # todo(nmj): handle errors
     
     response = {
         "status": {},
@@ -63,6 +64,7 @@ def get_movie(id_movie):
 
 
 # Route "/api/movie" (POST) create || update movie
+# todo(nmj): return relevant response to FirCinema to display it in the extension
 @app.route('/api/movie', methods=['POST'])
 @cross_origin()
 def post_movie():
@@ -75,4 +77,5 @@ def post_movie():
         "status": STATUS_201,
         "request.json": request.json,
     }
+
     return jsonify(response)
