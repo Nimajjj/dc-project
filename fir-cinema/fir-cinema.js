@@ -1,3 +1,4 @@
+// Copyright (C) 2023 Borello Benjamin
 (() => {
     if (window.hasRun) {
         return;

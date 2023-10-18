@@ -1,7 +1,9 @@
+# Copyright (C) 2023 Borello Benjamin
 # main.py
-from api import server
+import dc_api
 
 
 if __name__ == "__main__":
-    # Start API server
-    server.RunServer()
+    # Start DC-api server
+    dc_api.server.RunServer()
+

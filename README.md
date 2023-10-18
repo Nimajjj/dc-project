@@ -5,3 +5,5 @@ aka Dad Cinema - Project
 1. A API server allowing communication with a movie database. The server can also request movies data from the TMDB API.
 2. A Mozilla Firefox extension name `FirCinema` which is used to scrap data from AlloCine movie page. The scraped data is then send to the API server to by stored into the database.
 
+---
+Copyright (C) 2023 Borello Benjamin

@@ -1,7 +1,11 @@
+# Copyright (C) 2023 Borello Benjamin
 # tmdb.py
 import requests
+from models.language import Language
 from models.movie import Movie
-from models.movie_complete import MovieComplete
+from models.genre import Genre
+from models.country import Country
+from models.language import Language
 
 url = "https://api.themoviedb.org/3/movie/{movie_id}?language=fr-FR"
 headers = {
@@ -17,35 +21,36 @@ def RequestMovie(id: int) -> Movie|None:
     if not "title" in response.keys():
         return None
 
-    # get all relavent datas
+    movie = Movie()
+
+    movie.imdb_id = response["imdb_id"]
+    movie.language = response["original_language"]
+    movie.original_title = response["original_title"]
+    movie.overview = response["overview"]
+    movie.thumnail = response["poster_path"]
+    movie.release_date = response["release_date"]
+    movie.title = response["title"]
+    movie.duration = response["runtime"]
+
     genres = response["genres"]
-    imdb_id = response["imdb_id"]
-    ori_lang = response["original_language"]
-    ori_title = response["original_title"]
-    overview = response["overview"]
-    poster_path = response["poster_path"]
-    prod_countries = response["production_countries"]
-    release_date = response["release_date"]
-    spoken_lang = response["spoken_languages"]
-    title = response["title"]
-    duration = response["runtime"]
+    for genre in genres:
+        movie.genres.append(Genre(genre["name"]))
 
-    # make movie object
-    movie = Movie(
-        None,  # auto
-        duration,
-        ori_title,
-        imdb_id,
-        title,
-        overview,
-        poster_path,
-        release_date,
-        None,  # manual input
-        None,  # manual input
-        None, # manual input
-        None,  # scrap
-        None   # fk
-    )
+    countries = response["production_countries"]
+    for country in countries:
+        movie.countries.append(Country(
+            country["iso_3166_1"], 
+            country["name"]
+        ))
 
-    return MovieComplete(movie, genres, ori_lang, prod_countries, spoken_lang)
-
+    languages = response["spoken_languages"]
+    for language in languages:
+        movie.languages.append(Language(
+            language["iso_639_1"],
+            language["name"],
+            language["english_name"],
+        ))
+    
+    # Always assign src_type in last in case one of the previous assignment fail
+    movie.src_type = "TMDB"
+    return movie
