@@ -1,0 +1,20 @@
+:root {
+    --color-black: #000;
+    --color-white: #FFF;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    list-style: none;
+    text-decoration: none;
+    color: var(--color-black);
+}
+
+#root {
+    width: 100vw;
+    height: 100vh;
+}
