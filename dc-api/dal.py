@@ -2,6 +2,7 @@
 # dal.py
 
 # Singleton class for Database Abstraction Layer
+from dotenv import dotenv_values
 import mysql.connector
 from mysql.connector import cursor
 
@@ -15,12 +16,11 @@ class DAL():
 
     # Constructor
     def __init__(self) -> None:
-        # todo(nmj): move the f*cking credentials out there ...
         self.db = mysql.connector.connect(
-            host = "localhost",
-            user = "root",  # i know...
-            password = "",
-            database = "cinema"
+            host = dotenv_values("DATABASE_HOST"),
+            user = dotenv_values("DATABASE_USER"),
+            password = dotenv_values("DATABASE_PASSWORD"),
+            database = dotenv_values("DATABASE")
         )
 
 
