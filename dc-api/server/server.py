@@ -36,9 +36,10 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 def RunServer() -> None:
     if (os.environ.get('ENV') == 'production'):
+        # todo(nmj): Handle production environment
         app.run()
     else:
-        load_dotenv() # Load .env file if not in production environment
+        load_dotenv() # Load .env file only if not in production environment
         app.run(host='0.0.0.0', port=8080, debug=True)
 
 

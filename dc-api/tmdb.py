@@ -1,5 +1,6 @@
 # Copyright (C) 2023 Borello Benjamin
 # tmdb.py
+from dotenv import dotenv_values
 import requests
 from models.language import Language
 from models.movie import Movie
@@ -7,11 +8,10 @@ from models.genre import Genre
 from models.country import Country
 from models.language import Language
 
-# todo(nmj): move the f*cking credentials out there ...
 url = "https://api.themoviedb.org/3/movie/{movie_id}?language=fr-FR"
 headers = {
     "accept": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2ODkxOWQxOGFjMTE2MDg1ZTQ4ZjNiZTRjMmZkZTRiYyIsInN1YiI6IjY0MGM1MjQwZTE4ZTNmMDgxNmMyN2RjNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.e-SdYrD-u4jWvetmiwCE0lN9zSRjRAmpIlKDkgDIIB8"
+    "Authorization": f"Bearer {dotenv_values('TMDB_API_KEY')}"
 }
 
 def RequestMovie(id: int) -> Movie|None:
