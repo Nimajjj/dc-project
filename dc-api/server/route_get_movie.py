@@ -7,7 +7,7 @@ from models.movie import Movie
 
 
 def GetMovie(id_movie: int, option: str) -> Dict :
-    movie: Movie|None = None
+    movie: Dict = {}
 
     if (option == "minimal"):
         movie = Movie.SelectMovieMinimal(id_movie)
