@@ -3,9 +3,9 @@
 import re
 import locale
 import datetime
+from typing import Dict
 from dal import DAL
 from models.distributor import Distributor
-
 
 class  Movie:
     def __init__(self, *args) -> None:
@@ -22,7 +22,7 @@ class  Movie:
         self.original_title = ""
         self.duration = ""
         self.overview = ""
-        self.thumnail = ""
+        self.thumbnail = ""
         self.release_date = ""
         self.language = ""
         self.languages = [] 
@@ -43,7 +43,7 @@ class  Movie:
                 f"original_title={self.original_title},\n" \
                 f"duration={self.duration},\n" \
                 f"overview={self.overview},\n" \
-                f"thumnail={self.thumnail},\n" \
+                f"thumbnail={self.thumbnail},\n" \
                 f"release_date={self.release_date},\n" \
                 f"visa={self.visa},\n" \
                 f"distributor={self.distributor},\n" \
@@ -58,12 +58,80 @@ class  Movie:
                 f"awards={self.awards})"
 
 
+    @staticmethod
+    def SelectMovieMinimal(id_movie: int) -> Dict:
+        # toimplement
+        return {}
+
+
+    @staticmethod
+    def SelectMovieDetails(id_movie: int) -> Dict:
+        # Get movie
+        query = f"SELECT * FROM movies WHERE id_movie = {id_movie}"
+        movie_dict: Dict|None = DAL().SelectSingleRow(query)
+        if (not movie_dict):
+            return {}
+
+        # Get details
+        query = f"""
+            SELECT
+                m.id_movie,
+                GROUP_CONCAT(DISTINCT a.actor_name) AS actors,
+                GROUP_CONCAT(DISTINCT d.director_name) AS directors,
+                di.distributor_name,
+                GROUP_CONCAT(DISTINCT g.title) AS genres,
+                GROUP_CONCAT(DISTINCT l.language_name) AS languages,
+                GROUP_CONCAT(DISTINCT w.writer_name) AS writers
+            FROM movies m
+
+            LEFT JOIN actors_movies am ON m.id_movie = am.id_movie  
+            LEFT JOIN actors a ON am.id_actor = a.id_actor
+
+            LEFT JOIN directors_movies dm ON m.id_movie = dm.id_movie
+            LEFT JOIN directors d ON dm.id_director = d.id_director
+
+            LEFT JOIN distributors di ON m.id_distributor = di.id_distributor
+
+            LEFT JOIN genres_movies gm ON m.id_movie = gm.id_movie 
+            LEFT JOIN genres g ON gm.id_genre = g.id_genre
+
+            LEFT JOIN languages_movies lm ON m.id_movie = lm.id_language
+            LEFT JOIN languages l ON lm.id_language = l.id_language
+
+            LEFT JOIN movies_writers mw ON m.id_movie = mw.id_movie
+            LEFT JOIN writers w ON mw.id_writer = w.id_writer
+
+            WHERE m.id_movie = {id_movie} 
+            GROUP BY m.id_movie;
+        """
+        details_dict: Dict|None = DAL().SelectSingleRow(query)
+
+        if (not details_dict):
+            return {}
+
+        # Fromat responses
+        if(details_dict["actors"]):
+            details_dict["actors"] = details_dict["actors"].split(",")
+        if(details_dict["directors"]):
+            details_dict["directors"] = details_dict["directors"].split(",")
+        if(details_dict["genres"]):
+            details_dict["genres"] = details_dict["genres"].split(",")
+        if(details_dict["writers"]):
+            details_dict["writers"] = details_dict["writers"].split(",")
+        if(details_dict["distributor_name"]):
+            details_dict["distributor_name"] = details_dict["distributor_name"].strip()
+
+        # Return merged movie and details dictionnary
+        return (movie_dict | details_dict)
+
+
     # todo(nmj): double check movie title AND release date
     # to ensure that it is not an other movie with the same title
     def IsInDatabase(self) -> bool:
         query = "SELECT id_movie FROM movies WHERE title=%s;"
         res = DAL().Select(query, (self.title,))
         return (len(res) != 0)
+
 
     def GetDBMovieID(self) -> int:
         query = "SELECT id_movie FROM movies WHERE title=%s;"
@@ -250,7 +318,7 @@ class  Movie:
             self.imdb_id,
             self.title,
             self.overview, 
-            self.thumnail, 
+            self.thumbnail, 
             self.release_date, 
             self.visa, 
             self.minimum_age,
