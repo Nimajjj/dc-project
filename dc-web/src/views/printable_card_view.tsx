@@ -9,7 +9,6 @@ interface Movie {
     visa: string, 
     minimum_age: string,
     awards: string,
-    distributor: string,
     title: string,
     original_title: string,
     duration: string, 
@@ -17,6 +16,10 @@ interface Movie {
     thumbnail: string,
     release_date: string,
     language: string,
+    distributor: string,
+    actors: string[],
+    directors: string[],
+    writers: string[],
 }
 
 
@@ -33,15 +36,13 @@ async function GetMovie(id: string|undefined): Promise<Movie|null> {
     }
     
     if (!cachedMovie) {
-        const url = "http://127.0.0.1:8080/api/movie/";
-        const response = await fetch(url + id, {mode: "cors"})
+        const url = `http://127.0.0.1:8080/api/movie/${id}/details`;
+        const response = await fetch(url, {mode: "cors"})
         const data = await response.json();
         
         if (!data.movie) {
             return null;
         }
-
-        console.log(data);
 
         cachedMovie = {
             id_movie: Number(id),
@@ -49,14 +50,17 @@ async function GetMovie(id: string|undefined): Promise<Movie|null> {
             visa: data.movie.visa_number,
             minimum_age: data.movie.minimum_age,
             awards: data.movie.awards,
-            distributor: data.movie.id_distributor,
+            distributor: data.movie.distributor_name,
             title: data.movie.title,
             original_title: data.movie.original_title,
             duration: data.movie.duration_min,
             overview: data.movie.overview,
-            thumbnail: data.movie.thumnail,
+            thumbnail: data.movie.poster,
             release_date: data.movie.release_date,
-            language: data.movie.original_language
+            language: data.movie.original_language,
+            actors:  data.movie.actors,
+            directors:  data.movie.directors,
+            writers:  data.movie.writers,
         };
     }
 
@@ -101,9 +105,40 @@ export default function PrintableCardView() {
                 <h1 id="title" >{movie.title}</h1>
             </div>
 
-            <p>Durée: {movie.duration}</p>
-            <p>Synopsis: {movie.overview}</p>
-            <p>Visa: {movie.visa}</p>
+            <br/>
+            <div>
+                <h3>Synopsis</h3>
+                <p>{movie.overview}</p>
+            </div>
+
+            <br/>
+            <h3>Details</h3>
+            <table>
+                <tr>
+                    <td>Realisateur</td>
+                    <td>{movie.directors}</td>
+                </tr>
+                <tr>
+                    <td>Scenaristes</td>
+                    <td>{movie.writers}</td>
+                </tr>
+                <tr>
+                    <td>Acteurs</td>
+                    <td>{movie.actors}</td>
+                </tr>
+                <tr>
+                    <td>Distributeur</td>
+                    <td>{movie.distributor}</td>
+                </tr>
+                <tr>
+                    <td>Durée</td>
+                    <td>{movie.duration}</td>
+                </tr>
+                <tr>
+                    <td>Visa</td>
+                    <td>{movie.visa}</td>
+                </tr>
+            </table>
         </>
     );
 }
