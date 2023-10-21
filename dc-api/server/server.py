@@ -82,7 +82,7 @@ def post_movie():
     if not request.json or not 'title' in request.json:
         return jsonify({'error': 'Title is required'}), 400
 
-    route_post_movie.ApplyData(request.json)
+    route_post_movie.PostMovie(request.json)
 
     response = {
         "status": STATUS_201,
