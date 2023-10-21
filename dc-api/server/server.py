@@ -1,11 +1,13 @@
 # Copyright (C) 2023 Borello Benjamin
 # server/server.py
 import os
+from typing import Dict
 from dal import DAL
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
-from server import route_post_api_movie
+from models.movie import Movie
+from server import route_get_movie, route_post_movie
 
 
 # todo(nmj): move status const into an other script
@@ -39,26 +41,34 @@ def RunServer() -> None:
         # todo(nmj): Handle production environment
         app.run()
     else:
-        load_dotenv() # Load .env file only if not in production environment
         app.run(host='0.0.0.0', port=8080, debug=True)
 
 
 # Route "/api/movie/<id_movie>" (GET) return movie with the given id
-@app.route('/api/movie/<int:id_movie>', methods=['GET'])
-def get_movie(id_movie):
-    print(f"[DC-api] ['GET' /api/movie/{id_movie}] Requesting movie from database...")
-    dal = DAL()
-    query = f"SELECT * FROM movies WHERE id_movie={id_movie}"
+@app.route('/api/movie/<int:id_movie>/<string:option>', methods=['GET'])
+@cross_origin()
+def get_movie(id_movie, option):
+    print(f"[DC-api] ['GET' /api/movie/{id_movie}]/{option} Requesting movie from database...")
 
-    results = dal.SelectSingleRow(query)
-    # todo(nmj): handle errors
-    
     response = {
         "status": {},
-        "movie": results,
+        "movie": None 
     }
 
-    response["status"] = STATUS_200
+    if (not option in ["minimal", "details"]):
+        print(f"[DC-api] ['GET' /api/movie/{id_movie}]/{option} Unknown option")
+        response["status"] = STATUS_400
+        return jsonify(response)
+
+    movie: Dict = route_get_movie.GetMovie(id_movie, option)
+
+    response["movie"] = movie
+    if (movie):
+        print(f"[DC-api] ['GET' /api/movie/{id_movie}]/{option} Movie request successfuly.")
+        response["status"] = STATUS_200
+    else:
+        print(f"[DC-api] ['GET' /api/movie/{id_movie}]/{option} Movie request failed.")
+        response["status"] = STATUS_404
 
     return jsonify(response)
 
@@ -72,7 +82,7 @@ def post_movie():
     if not request.json or not 'title' in request.json:
         return jsonify({'error': 'Title is required'}), 400
 
-    route_post_api_movie.ApplyData(request.json)
+    route_post_movie.ApplyData(request.json)
 
     response = {
         "status": STATUS_201,
