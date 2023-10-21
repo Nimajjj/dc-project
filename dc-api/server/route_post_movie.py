@@ -1,5 +1,5 @@
 # Copyright (C) 2023 Borello Benjamin
-# server/route_post_api_movie.py
+# server/route_post_movie.py
 from models.actor import Actor
 from models.country import Country
 from models.director import Director
@@ -10,14 +10,14 @@ from models.language import Language
 from models.writer import Writer
 
 
-def ApplyData(data) -> None:
+def PostMovie(data) -> None:
     # Creating Movie object
     m = Movie()
     m.src_type = "FirCinema"
     m.title = data["title"]
     m.duration = data["duration"]
     m.overview = data["overview"]
-    m.thumnail = data["thumbnail"]
+    m.thumbnail = data["thumbnail"]
     m.release_date = data["date"]
     m.visa = data["visa"]
     m.distributor = Distributor(data["distributor"])

@@ -2,7 +2,7 @@
 # dal.py
 
 # Singleton class for Database Abstraction Layer
-from dotenv import dotenv_values
+from dotenv import dotenv_values, load_dotenv
 import mysql.connector
 from mysql.connector import cursor
 
@@ -15,12 +15,14 @@ class DAL():
 
 
     # Constructor
+    # tofix(nmj): wtf... dotenv just don't works anymore ...
     def __init__(self) -> None:
+        load_dotenv()
         self.db = mysql.connector.connect(
-            host = dotenv_values("DATABASE_HOST"),
-            user = dotenv_values("DATABASE_USER"),
-            password = dotenv_values("DATABASE_PASSWORD"),
-            database = dotenv_values("DATABASE")
+            host = "localhost",
+            user = "root",
+            password = "",
+            database = "cinema" 
         )
 
 
