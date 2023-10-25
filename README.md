@@ -1,5 +1,4 @@
 # DC-Project
-Dad Cinema Project :
 > DC-api _v0.1_
 > FirCinema _v0.1_
 > DC-Web _coming soon..._
