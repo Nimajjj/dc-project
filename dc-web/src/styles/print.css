@@ -1,0 +1,56 @@
+section {
+    height: 100vh;
+    width: 100vw;
+}
+
+#header {
+    display: flex;
+    margin-bottom: 2vh;
+    border-bottom: 1px solid black;
+    align-items: flex-end;
+}
+
+#header > #printButton {
+    margin-right: 1vw;
+    width: 100px;
+    height: 24px;
+}
+
+#header > #title {
+    display: inline;
+    height: 28px;
+}
+
+#header > #duration {
+    margin-left: 1vw;
+    font-size: 12px;
+}
+
+#details {
+    display: flex;
+    margin-bottom: 1vh;
+}
+
+#details > #thumbnail {
+    height: 300px;
+    margin-right: 1vw;
+}
+
+.noPrint {
+    display: none;
+}
+
+table {
+    height: fit-content;
+}
+
+td {
+    border-bottom: 1px solid darkgrey;
+}
+
+tr td:first-child {
+    font-weight: bold;
+    width: 10vw;
+    padding-right: 2vw;
+}
+
