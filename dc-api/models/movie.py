@@ -81,7 +81,8 @@ class  Movie:
                 di.distributor_name,
                 GROUP_CONCAT(DISTINCT g.title) AS genres,
                 GROUP_CONCAT(DISTINCT l.language_name) AS languages,
-                GROUP_CONCAT(DISTINCT w.writer_name) AS writers
+                GROUP_CONCAT(DISTINCT w.writer_name) AS writers,
+                GROUP_CONCAT(DISTINCT c.country_name) AS countries
             FROM movies m
 
             LEFT JOIN actors_movies am ON m.id_movie = am.id_movie  
@@ -100,6 +101,9 @@ class  Movie:
 
             LEFT JOIN movies_writers mw ON m.id_movie = mw.id_movie
             LEFT JOIN writers w ON mw.id_writer = w.id_writer
+
+            LEFT JOIN countries_movies cm ON m.id_movie = cm.id_movie 
+            LEFT JOIN countries c ON cm.id_country = c.id_country
 
             WHERE m.id_movie = {id_movie} 
             GROUP BY m.id_movie;
@@ -120,6 +124,8 @@ class  Movie:
             details_dict["writers"] = details_dict["writers"].split(",")
         if(details_dict["distributor_name"]):
             details_dict["distributor_name"] = details_dict["distributor_name"].strip()
+        if(details_dict["countries"]):
+            details_dict["countries"] = details_dict["countries"].split(",")
 
         # Return merged movie and details dictionnary
         return (movie_dict | details_dict)
